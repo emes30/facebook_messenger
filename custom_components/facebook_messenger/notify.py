@@ -6,6 +6,8 @@ import logging
 import requests
 import voluptuous as vol
 
+import os
+
 from homeassistant.components.notify import (
     ATTR_DATA,
     ATTR_TARGET,
@@ -22,6 +24,9 @@ CONF_TARGETS = "targets"
 CONF_NAME = "name"
 CONF_SID = "sid"
 BASE_URL = "https://graph.facebook.com/v2.6/me/messages"
+KEY_MEDIA = "media"
+KEY_MEDIA_TYPE = "media_type"
+
 
 TARGET_SCHEMA = vol.Schema(
     {vol.Required(CONF_SID): cv.string, vol.Required(CONF_NAME): cv.string}
@@ -64,11 +69,19 @@ class FacebookNotificationService(BaseNotificationService):
 
         body_message = {"text": message}
 
+        media = None
+        media_type = "image/jpeg"
+
         if data is not None:
             body_message.update(data)
             # Only one of text or attachment can be specified
             if "attachment" in body_message:
                 body_message.pop("text")
+            if KEY_MEDIA in body_message:
+                media = body_message[KEY_MEDIA]
+                if not os.path.exists(media):
+                    _LOGGER.error(f"File not found. [{ media }]")
+                    media = None
 
         if not targets:
             _LOGGER.error("At least 1 target is required")
