@@ -1,0 +1,11 @@
+{
+  "codeowners": ["@emes30"],
+  "config_flow": false,
+  "dependencies": [],
+  "documentation": "https://github.com/emes30/facebook_messenger",
+  "domain": "facebook_messenger",
+  "iot_class": "cloud_push",
+  "name": "Facebook Messenger",
+  "requirements": [],
+  "version": "1.0.0"
+}
