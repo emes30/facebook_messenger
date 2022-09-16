@@ -24,6 +24,7 @@ CONF_TARGETS = "targets"
 CONF_NAME = "name"
 CONF_SID = "sid"
 BASE_URL = "https://graph.facebook.com/v2.6/me/messages"
+BASE_URL_MEDIA = "https://graph.facebook.com/v14.0/me/messages"
 KEY_MEDIA = "media"
 KEY_MEDIA_TYPE = "media_type"
 
@@ -80,7 +81,7 @@ class FacebookNotificationService(BaseNotificationService):
             if KEY_MEDIA in body_message:
                 media = body_message[KEY_MEDIA]
                 if not os.path.exists(media):
-                    _LOGGER.error(f"File not found. [{ media }]")
+                    _LOGGER.error(f"Media file not found. [{ media }]")
                     media = None
 
         if not targets:
@@ -99,19 +100,38 @@ class FacebookNotificationService(BaseNotificationService):
             else:
                 recipient = {"id": target}
 
-            body = {
-                "recipient": recipient,
-                "message": body_message,
-                "messaging_type": "MESSAGE_TAG",
-                "tag": "ACCOUNT_UPDATE",
-            }
-            resp = requests.post(
-                BASE_URL,
-                data=json.dumps(body),
-                params=payload,
-                headers={"Content-Type": CONTENT_TYPE_JSON},
-                timeout=10,
-            )
+            if media:
+                resp = requests.post(
+                    url=BASE_URL_MEDIA,
+                    data={
+                        "access_token": self.page_access_token,
+                        "recipient": json.dumps(recipient),
+                        "message": json.dumps(
+                            {
+                                "attachment": {
+                                    "type": "image",
+                                    "payload": {"is_reusable": False},
+                                }
+                            }
+                        ),
+                    },
+                    files={"filedata": ("media.jpg", open(media, "rb"), media_type)},
+                    timeout=10,
+                )
+            else:
+                body = {
+                    "recipient": recipient,
+                    "message": body_message,
+                    "messaging_type": "MESSAGE_TAG",
+                    "tag": "ACCOUNT_UPDATE",
+                }
+                resp = requests.post(
+                    BASE_URL,
+                    data=json.dumps(body),
+                    params=payload,
+                    headers={"Content-Type": CONTENT_TYPE_JSON},
+                    timeout=10,
+                )
             if resp.status_code != HTTPStatus.OK:
                 log_error(resp)
 
