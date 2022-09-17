@@ -1,5 +1,4 @@
 {
   "name": "Facebook Messenger",
-  "render_readme": true,
-  "iot_class": "cloud_push"
+  "render_readme": true
 }

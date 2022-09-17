@@ -3,6 +3,7 @@
   "config_flow": false,
   "dependencies": [],
   "documentation": "https://github.com/emes30/facebook_messenger",
+  "issue_tracker": "https://github.com/emes30/facebook_messenger/issues",
   "domain": "facebook_messenger",
   "iot_class": "cloud_push",
   "name": "Facebook Messenger",
