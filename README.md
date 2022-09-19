@@ -30,7 +30,7 @@ SIDs and use it as notification target.
 
 ### Installation
 
-HASS is not available yet. You must use manual method.
+HACS is not available yet. You must use manual method.
 Copy the `facebook_messenger` folder into the `config\custom_components` folder of your Home Assistant instance, and restart.
 
 ----
