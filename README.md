@@ -18,6 +18,7 @@ This is an upgrade for <a href="https://www.home-assistant.io" target="_blank">H
  * [Installation](#installation)
  * [Configuration](#configuration)
  * [How to obtain your Facebook token](#how-to-obtain-your-facebook-token)
+ * [Hot to obtain your user's PSID](#how-to-obtain-your-user-psid)
  * [Installation and Configuration Summary](#installation-and-configuration-summary)
  * [Usage](#usage)
  * [License](#license)
@@ -51,7 +52,7 @@ notify:
   platform: facebook_messenger
   page_access_token: <YOUR FACEBOOK TOKEN>
   targets:
-    - sid: <YOUR SID>
+    - sid: <YOUR PSID>
       name: mike
 ```
 
@@ -80,6 +81,26 @@ When you've done with registration process, add [new application](https://develo
 9. Ignore warning and click Ready!, your page is connected with Facebook
 10. Return to **Access Tokens** tab again, now click **Generate token**, check I understand,
 11. Success :muscle: finally you have your token, copy and save it
+
+----
+
+### How to obtain your user PSID
+
+This part is quite tricky, hope you can get through this. As using phone numbers is not an option nowdays, this is the only way to get things working. To find your (or your testers) PSID you have to assign webhook
+to your page, that webhook will reply with your PSID. Let's start.
+
+1. For creating webhook we'll use [glitch.com](https://glitch.com), you don't need to register there
+2. Open my project [get-messenger-page-sid](https://glitch.com/edit/#!/get-messenger-page-sid) and click `Remix`
+3. New project is created, on the left you have file manager, click `.env`
+4. Paste your **Facebook Access Token** as **PAGE_ACCESS_TOKEN** variable value
+5. Put value of your choice into **VERIFY_TOKEN** value, exactly the same value you enter at Facebook, step 10
+6. At the bottom of the screen click `PREVIEW` then `Open preview pane`
+7. Preview opens on the right side, you'll see url ex. `observant-foregoing-scent.glitch.me/`, open menu and click `Copy Link`
+8. Now go to your facebook developer dashboard [https://developers.facebook.com/apps/](https://developers.facebook.com/apps/), and click your app
+9. On the left menu click `Messenger`, `Settings`, find `Webhooks` section, click `Add Callback URL`
+10. Paste your glitch url here, append `/webhook` at the end so full url looks something like `https://observant-foregoing-scent.glitch.me/webhook`, enter your verify token, click `Verify and save`
+11. You should see your webhook added, click `Add subscriptions` and select `messages`
+12. Your webhook is ready, now use Messenger to send any message to your page, it replies with your PSID
 
 
 ----
